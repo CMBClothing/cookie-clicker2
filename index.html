@@ -29,9 +29,10 @@
       padding: 1rem;
       background-color: #fff8dc;
       border: 2px solid #d2691e;
-      width: 200px;
+      width: 250px;
       cursor: pointer;
       border-radius: 10px;
+      display: block;
     }
     .upgrade:disabled {
       opacity: 0.5;
@@ -43,19 +44,29 @@
   <h1>Cookie Clicker 🍪</h1>
   <img id="cookie" alt="Cookie" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAMAAACahl6sAAAAeFBMVEX///8AAADi4uLs7Ozd3d3f39/p6ens7Ozq6urp6enY2Njt7e35+fmAgIC/v7+8vLx3d3eDg4PZ2dnPz89XV1dlZWVJSUmRkZGnp6ehoaHk5OS3t7d+fn5ubm7Hx8ejo6ODg4OTk5Pq6uqSkpJsbGyYmJiGhoYxMTErKysXFxfZrrYrAAAFGklEQVR4nO2d63aiMBCGV7bK0NpxBe2h6fr//0dspVgiJJDvHtue3eZx7sQpOsM2eRZCQAAAAAAAAAAAAAAAAB/jSVeRtRjkGoUHaGlUg1aPUUz6DOrTVI1Wm6eVROv1/WmoqtulvPeqpYX6iJUE3Ecr6lI2ck2xfZT6gVlMbn0eOE9jA7VPauVRPKnYu45GqJOW0c9I7gySa7smqsY2Eyxkq0T1VWPrm+E05bM52e1hr5LPIRHk2ehKSeDURWX8qO9rRI5Qq2m7Fn3HWZy53RvwYX6kPpVa4p6JUeLHGfTYwU8ssTzdxZzRf0VqYYqaxeqTfefZ2qzG79EMruoLM7Z5VfYXmOYnh05hRI9s0yv+9zFTfuvGZVmPfe0vSPrhf3Uz9Fe3mWT6R1edPtWyjcxmFd1TtLk9xszK1eYO5lWmuV7W+d+vSLcWl8i5ks7NZdzauY5qrsROKxtvZqYtMmvRvbqLWvaV7X2O7gA32gJdp1k7srXRRu2eYtUNctmCqxFlOq6lphzshyU8cl+l3nU9xP13GV7axDntfLbrUlKt9ukblmv5dlzkK7fU34V+bqfSKrEtG3W+oOZzN41P0m+cK/P7OaebWS/eIazOTo0tlq7uykzms43kvo5ZUrSx7NPq7oXHOnZa13TNtmuJX63Nfe7pu5XO8LZcs/KUvktOL1O/WZdzVZbbexFsvt7P5VsGLDxd3YlD5mHheYr1jzYzMRbjIXmB+aXx+/AVNwe2frfIMbX5Xfu9Kh+/K/q57P2uOXbWx7vjNxNRdnbw19G7G6+bTb3taeQ4Pf29qqVv0siv6QhC5JuRok3tGK0zyXpdEtwR9HST2KjPkUQbl+P4e2THn1Y7XwRJPi3KjOc2K14Nup2H9N5+5Q+vcI+22ru9ssZKfy4vU5gkz1ML3OKfXXL+K2dsHD9C7ivCl1erIRXycdzK7rNdpmrRX+QXCK5HtwzzLGu36E2akzHEx9GnqpMYT1GsXdOLXMzU6TVyP1VEnPmxKZ+gxXLU+pWeOmLrlsH8U0Lv3wmb3X0of9Y3mI7lR2aH51R7Z8lZJ9xRTm5nxRRs7Mppp7NvuuUbMv0yzpThnaPKz7dmZL86hmbcVK7U1HtL91HPBPy76eZ4fksKndspPY2rP09in1hf7syZ5u6b7Uae7bC/aYv2Oq3uWVmzFzVL37T0mC7+VDL+08xRJuPB9lz1ewL3odjvpqM7zZzmecZzZSm7eStNq7+mfdff2d/q1o8AAAAAAAAAAAAAAAAAADzCXwBL0HpUd7biPwAAAABJRU5ErkJggg==" />
   <div class="counter">Cookies: <span id="score">0</span></div>
+
   <button class="upgrade" id="grandma">Buy Grandma (Cost: 50)</button>
+  <button class="upgrade" id="factory">Buy Factory (Cost: 200)</button>
+  <button class="upgrade" id="robot">Buy Robot (Cost: 1000)</button>
 
   <script>
     let cookies = 0;
     let grandmas = 0;
+    let factories = 0;
+    let robots = 0;
+
     let grandmaCost = 50;
+    let factoryCost = 200;
+    let robotCost = 1000;
 
     const scoreDisplay = document.getElementById('score');
     const cookie = document.getElementById('cookie');
     const grandmaButton = document.getElementById('grandma');
+    const factoryButton = document.getElementById('factory');
+    const robotButton = document.getElementById('robot');
 
     cookie.addEventListener('click', () => {
-      cookies += 1 + grandmas; // each grandma adds +1 per click
+      cookies += 1 + grandmas + factories * 2 + robots * 5;
       updateDisplay();
     });
 
@@ -69,14 +80,35 @@
       }
     });
 
+    factoryButton.addEventListener('click', () => {
+      if (cookies >= factoryCost) {
+        cookies -= factoryCost;
+        factories++;
+        factoryCost = Math.floor(factoryCost * 1.6);
+        factoryButton.textContent = `Buy Factory (Cost: ${factoryCost})`;
+        updateDisplay();
+      }
+    });
+
+    robotButton.addEventListener('click', () => {
+      if (cookies >= robotCost) {
+        cookies -= robotCost;
+        robots++;
+        robotCost = Math.floor(robotCost * 1.7);
+        robotButton.textContent = `Buy Robot (Cost: ${robotCost})`;
+        updateDisplay();
+      }
+    });
+
     function updateDisplay() {
       scoreDisplay.textContent = cookies;
       grandmaButton.disabled = cookies < grandmaCost;
+      factoryButton.disabled = cookies < factoryCost;
+      robotButton.disabled = cookies < robotCost;
     }
 
-    // Passive cookie generation from grandmas every second
     setInterval(() => {
-      cookies += grandmas;
+      cookies += grandmas + factories * 3 + robots * 10;
       updateDisplay();
     }, 1000);
   </script>
