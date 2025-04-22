@@ -48,25 +48,33 @@
   <button class="upgrade" id="grandma">Buy Grandma (Cost: 50)</button>
   <button class="upgrade" id="factory">Buy Factory (Cost: 200)</button>
   <button class="upgrade" id="robot">Buy Robot (Cost: 1000)</button>
+  <button class="upgrade" id="portal">Buy Portal (Cost: 5000)</button>
+  <button class="upgrade" id="timeMachine">Buy Time Machine (Cost: 20000)</button>
 
   <script>
     let cookies = 0;
     let grandmas = 0;
     let factories = 0;
     let robots = 0;
+    let portals = 0;
+    let timeMachines = 0;
 
     let grandmaCost = 50;
     let factoryCost = 200;
     let robotCost = 1000;
+    let portalCost = 5000;
+    let timeMachineCost = 20000;
 
     const scoreDisplay = document.getElementById('score');
     const cookie = document.getElementById('cookie');
     const grandmaButton = document.getElementById('grandma');
     const factoryButton = document.getElementById('factory');
     const robotButton = document.getElementById('robot');
+    const portalButton = document.getElementById('portal');
+    const timeMachineButton = document.getElementById('timeMachine');
 
     cookie.addEventListener('click', () => {
-      cookies += 1 + grandmas + factories * 2 + robots * 5;
+      cookies += 1 + grandmas + factories * 2 + robots * 5 + portals * 20 + timeMachines * 50;
       updateDisplay();
     });
 
@@ -100,15 +108,37 @@
       }
     });
 
+    portalButton.addEventListener('click', () => {
+      if (cookies >= portalCost) {
+        cookies -= portalCost;
+        portals++;
+        portalCost = Math.floor(portalCost * 1.8);
+        portalButton.textContent = `Buy Portal (Cost: ${portalCost})`;
+        updateDisplay();
+      }
+    });
+
+    timeMachineButton.addEventListener('click', () => {
+      if (cookies >= timeMachineCost) {
+        cookies -= timeMachineCost;
+        timeMachines++;
+        timeMachineCost = Math.floor(timeMachineCost * 2);
+        timeMachineButton.textContent = `Buy Time Machine (Cost: ${timeMachineCost})`;
+        updateDisplay();
+      }
+    });
+
     function updateDisplay() {
       scoreDisplay.textContent = cookies;
       grandmaButton.disabled = cookies < grandmaCost;
       factoryButton.disabled = cookies < factoryCost;
       robotButton.disabled = cookies < robotCost;
+      portalButton.disabled = cookies < portalCost;
+      timeMachineButton.disabled = cookies < timeMachineCost;
     }
 
     setInterval(() => {
-      cookies += grandmas + factories * 3 + robots * 10;
+      cookies += grandmas + factories * 3 + robots * 10 + portals * 25 + timeMachines * 75;
       updateDisplay();
     }, 1000);
   </script>
